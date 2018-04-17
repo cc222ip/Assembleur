@@ -1,0 +1,30 @@
+            .data
+M1:         .byte 1, 2, 3
+            .byte 4, 5, 6
+M2:         .byte 1, 2
+            .byte 3, 4
+            .byte 5, 6
+Res:        .byte 0, 0
+            .byte 0, 0
+            .globl main
+            .text
+
+main:       push $M1                                #40(%rsp)
+            push $M2                                #32(%rsp)
+            push $Res                               #24(%rsp)
+            push $2             #Nombre lignes M1   #16(rsp)
+            push $3             #Nombre lignes M2   #8(%rsp)
+            call Produit
+            ret
+
+Produit:    movb $0, %rax
+            movb 40(%rsp), %al  #al pointe sur la première valeur de M1
+            movb 32(%rsp), %bl  #al pointe sur la première valeur de M2
+            movb 24(%rsp), %cl  #al pointe sur la première valeur de Res (0)
+
+boucle:     mulb %bl            #Multiplie les cellules des matrices M1 et M2
+            movb %al, %cl       #Stock le résultat de la multiplication dans la matrice Res
+
+            addb $1, %al        #Passe à la valeur suivante de la matrice M1
+            addb $1, %bl        #Passe à la valeur suivante de la matrice M2
+            addb $1, %cl        #Passe à la valeur suivante de la matrice Res
